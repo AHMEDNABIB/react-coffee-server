@@ -29,19 +29,21 @@ async function run() {
 		await client.connect();
 
 		const coffeeCollection = client.db("coffeeDB").collection("coffee");
-
+        // get all ciffe
 		app.get("/coffee", async (req, res) => {
 			const cursor = coffeeCollection.find();
 			const result = await cursor.toArray();
 			res.send(result);
 		});
 
-		app.get("/coffee/:id", async (req, res) => {
-			const cursor = coffeeCollection.find();
-			const result = await cursor.toArray();
+	//   find a coffee
+        app.get("/coffee/:id", async (req, res) => {
+			const id = req.params.id;
+			const query = { _id: new ObjectId(id) };
+			const result = await coffeeCollection.findOne(query);
 			res.send(result);
 		});
-
+        // create a coffee
 		app.post("/coffee", async (req, res) => {
 			const newCoffee = req.body;
 			console.log(newCoffee);
@@ -49,6 +51,11 @@ async function run() {
 			const result = await coffeeCollection.insertOne(newCoffee);
 			res.send(result);
 		});
+
+
+		// update a coffee
+
+		// delete a coffee
 
 		app.delete("/coffee/:id", async (req, res) => {
 			const id = req.params.id;
